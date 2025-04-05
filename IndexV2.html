@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulacro fortalecimiento en matematicas UNAL</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        #timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .timer-alert {
+            color: #dc3545;
+            animation: pulse 1s infinite;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .active-screen {
+            display: block;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            margin: 10px 0;
+        }
+
+        .warning-box {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .welcome-message {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        #examScreen h2 {
+            display: none;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .options label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .options label:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .options input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        
+        .option-letter {
+            font-weight: bold;
+            margin-right: 8px;
+            color: #2c3e50;
+            min-width: 20px;
+            display: inline-block;
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        
+        .question-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: block;
+        }
+        
+        .image-caption {
+            font-size: 0.9em;
+            color: #6c757d;
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 15px;
+        }
+
+        /* Additional CSS for better view of the results */
+        #resultsScreen {
+            background-color: #f7f7f7;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        .result-item {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .result-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .result-item.correct {
+            border-left: 6px solid #28a745;
+            background-color: #e8f5e9;
+        }
+        .result-item.incorrect {
+            border-left: 6px solid #dc3545;
+            background-color: #ffebee;
+        }
+        .result-item h3 {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .result-item p {
+            font-size: 1em;
+            color: #555;
+            line-height: 1.5;
+        }
+        .result-item p b {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="timer">00:00</div>
+    
+    <div class="container">
+        <!-- Screen 1: Name Entry -->
+        <div id="nameScreen" class="screen active-screen">
+            <h1>Bienvenido(a) al simulacro del curso fortalecimiento en Matemáticas UNAL </h1>
+            <p>Ingresa tu nombre para iniciar:</p>
+            <input type="text" id="userName" placeholder="Tu nombre" required>
+            <button onclick="validateName()">Continuar</button>
+        </div>
+
+        <!-- Screen 2: Welcome and Instructions -->
+        <div id="welcomeScreen" class="screen">
+            <h1 id="greetingTitle"></h1>
+            <div class="welcome-message">
+                <p>Este material ha sido diseñado con el propósito de repasar y consolidar los contenidos abordados durante el curso "Fortalecimiento en Matemáticas" de la Universidad Nacional de Colombia. Además, incluye preguntas formuladas en un formato similar al del examen de admisión de la UNAL. </p>
+                
+                <div class="warning-box">
+                    <h3>A continuación, se presentan algunas recomendaciones para la adecuada ejecución de este simulacro:</h3>
+                    <ul>
+                        <li>El simulacro consta de <b>40 preguntas</b> de selección múltiple, similares a las formuladas en los exámenes de admisión.</li>
+                        <li>Dado que en el examen de admisión se dispone de un tiempo límite de 1 minuto y 30 segundos por pregunta, en la esquina superior derecha encontrará un contador para que administre su tiempo. Este contador es solo una guía; si excede el tiempo sugerido para la ejecución de este simulacro (45 minutos), podrá continuar realizándolo sin ningún inconveniente.</li>
+                        <li>Se recomienda <b>evitar el uso de herramientas de inteligencia artificial (ChatGPT, DeepSeek, Gemini, etc)</b> durante la realización de este simulacro, ya que en el examen no contará con el apoyo de dichas herramientas. De preferencia, puede utilizar estas herramientas para verificar sus respuestas una vez haya concluido el simulacro. </li>
+                        <li>Al finalizar el simulacro, podrá visualizar su puntaje final, las respuestas seleccionadas y las correctas para cada pregunta. Si desea guardar los resultados, puede hacerlo siguiendo estos pasos: presione <b>Ctrl + P</b> y seleccione la opción "Guardar como PDF" en la sección de impresoras.</li>
+                        <li>Puede realizar este simulacro las veces que considere necesario.</li>
+                    </ul>
+                </div>
+
+                <p>Tenga en cuenta que este material ha sido elaborado exclusivamente para su autoevaluación. <b>No tiene ninguna incidencia en la certificación final del curso</b>, utilicelo como una herramienta de retroalimentación, para probarse a usted mismo.
+                </p>
+            </div>
+            <button onclick="startExam()">Iniciar simulacro</button>
+        </div>
+
+        <!-- Screen 3: Exam -->
+        <div id="examScreen" class="screen">
+            <h2 id="examTitle" style="display: none;"></h2>
+            <div id="questionsContainer"></div>
+            <button onclick="submitTest()">Finalizar simulacro</button>
+        </div>
+
+        <!-- Screen 4: Results -->
+        <div id="resultsScreen" class="screen">
+            <h2>Resultados del simulacro</h2>
+            
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-value" id="score"></div>
+                    <div class="stat-label">Puntaje final</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="timeSpent"></div>
+                    <div class="stat-label">Duracion</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="avgTimePerQuestion"></div>
+                    <div class="stat-label">Tiempo promedio por pregunta</div>
+                </div>
+            </div>
+            
+            <div id="detailedResults"></div>
+        </div>
+    </div>
+
+    <script>
+        let startTime, timerInterval;
+        let studentName = "";
+        const questions = [
+            {
+                question: "Si \\(a, b, c\\) son números primos diferentes y \\( n = \\frac{a^{-1} b^{-3}}{a^{-2} b^{-4} c^{-2}} \\) es correcto afirmar que:",
+                options: [
+                    { text: " \\(n\\) es entero.", letter: "A" },
+                    { text: " \\(n\\) es un número primo.", letter: "B" },
+                    { text: " \\(n\\) es un racional negativo.", letter: "C" },
+                    { text: " \\(n\\) es irracional.", letter: "D" }
+                ],
+                correct: 0
+            },
+            {
+                question: "What phenomenon is shown in this image?",
+                image: {
+                    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Alice_drink_me.jpg/250px-Alice_drink_me.jpg",
+                    caption: "Figure 2"
+                },
+                options: [
+                    { text: "Reflection", letter: "a" },
+                    { text: "Refraction", letter: "b" },
+                    { text: "Diffraction", letter: "c" },
+                    { text: "Dispersion", letter: "d" }
+                ],
+                correct: 1
+            },
+
+        ];
+
+        function validateName() {
+            studentName = document.getElementById('userName').value.trim();
+            if (!studentName) {
+                alert('Porfavor ingresa tu nombre');
+                return;
+            }
+            
+            // Show welcome screen
+            document.getElementById('nameScreen').classList.remove('active-screen');
+            document.getElementById('welcomeScreen').classList.add('active-screen');
+            document.getElementById('greetingTitle').textContent = `Hola, ${studentName}!`;
+        }
+
+        function startExam() {
+            // Hide welcome screen, show exam screen
+            document.getElementById('welcomeScreen').classList.remove('active-screen');
+            document.getElementById('examScreen').classList.add('active-screen');
+            document.getElementById('examTitle').textContent = `${studentName}'s Science Test`;
+            document.getElementById('timer').style.display = 'block';
+            
+            // Initialize questions
+            const container = document.getElementById('questionsContainer');
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                // Build image HTML if present
+                const imageHTML = q.image ? `
+                    <img src="${q.image.url}" 
+                         alt="${q.image.caption}" 
+                         class="question-image">
+                    <p class="image-caption">${q.image.caption}</p>
+                ` : '';
+                
+                // Generate options with letters
+                const optionsHTML = q.options.map((opt, i) => `
+                    <label>
+                        <input type="radio" name="q${index}" value="${i}">
+                        <span class="option-letter">${opt.letter}.</span>
+                        <span class="option-text">${opt.text}</span>
+                    </label>
+                `).join('');
+                
+                questionDiv.innerHTML = `
+                    <h3>Pregunta ${index + 1}</h3>
+                    <p>${q.question}</p>
+                    ${imageHTML}
+                    <div class="options">${optionsHTML}</div>
+                `;
+                container.appendChild(questionDiv);
+            });
+            
+            // Start timer
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+            MathJax.typesetPromise().catch(console.error);
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            const timer = document.getElementById('timer');
+            timer.textContent = `${minutes}:${seconds}`;
+            
+            if (elapsed > 3600) { // 60 minutes = 3600 seconds
+                timer.classList.add('timer-alert');
+            }
+        }
+
+        function submitTest() {
+            clearInterval(timerInterval);
+            
+            // Calculate total time spent
+            const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+            const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+            
+            // Calculate score and average time
+            let score = 0;
+            const results = questions.map((q, index) => {
+                const selected = document.querySelector(`input[name="q${index}"]:checked`);
+                const userAnswer = selected ? parseInt(selected.value) : null;
+                const isCorrect = userAnswer === q.correct;
+                if (isCorrect) score++;
+                
+                // Prepare question data for results display
+                const questionData = {
+                    ...q,
+                    userAnswer,
+                    optionsWithLetters: q.options.map(opt => ` ${opt.text}`)
+                };
+                
+                return questionData;
+            });
+            
+            // Calculate average time per question
+            const avgTimeSeconds = Math.round(totalSeconds / questions.length);
+            const avgTimeDisplay = `${Math.floor(avgTimeSeconds / 60)}m ${avgTimeSeconds % 60}s`;
+            
+            // Show results
+            document.getElementById('examScreen').classList.remove('active-screen');
+            document.getElementById('resultsScreen').classList.add('active-screen');
+            
+            // Update stats display
+            document.getElementById('score').textContent = `${score}/${questions.length}`;
+            document.getElementById('timeSpent').textContent = `${minutes}m ${seconds}s`;
+            document.getElementById('avgTimePerQuestion').textContent = avgTimeDisplay;
+            
+            // Detailed results with image support
+            const detailedResults = document.getElementById('detailedResults');
+            results.forEach((q, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `result-item ${q.userAnswer === q.correct ? 'correct' : 'incorrect'}`;
+                
+                // Include image in results if present
+                const resultImageHTML = q.image ? `
+                    <img src="${q.image.url}" 
+                         alt="${q.image.caption}" 
+                         class="question-image">
+                    <p class="image-caption">${q.image.caption}</p>
+                ` : '';
+                
+                resultDiv.innerHTML = `
+                    <h3>Pregunta ${index + 1}</h3>
+                    <p>${q.question}</p>
+                    ${resultImageHTML}
+                    <p><b>Respuesta seleccionada:</b> ${q.userAnswer !== null ? q.optionsWithLetters[q.userAnswer] : '<b>No resuelta</b>'}</p>
+                    <p><b>Respuesta correcta:</b>${q.optionsWithLetters[q.correct]}</p>
+                `;
+                detailedResults.appendChild(resultDiv);
+            });
+            MathJax.typesetPromise().catch(console.error);
+        }
+    </script>
+</body>
+</html>
