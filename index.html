@@ -148,6 +148,19 @@
             display: inline-block;
         }
         
+        .option-with-image {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .option-image {
+            max-width: 200px;
+            max-height: 160px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
         .stats-container {
             display: flex;
             justify-content: space-around;
@@ -233,6 +246,14 @@
         .result-item p b {
             color: #333;
         }
+        
+        .result-option-image {
+            max-width: 200px;
+            max-height: 160px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -257,14 +278,14 @@
                     <h3>A continuación, se presentan algunas recomendaciones para la adecuada ejecución de este simulacro:</h3>
                     <ul>
                         <li>El simulacro consta de <b>40 preguntas</b> de selección múltiple, similares a las formuladas en los exámenes de admisión.</li>
-                        <li>Dado que en el examen de admisión se dispone de un tiempo límite de 1 minuto y 30 segundos por pregunta, en la esquina superior derecha encontrará un contador para que administre su tiempo. Este contador es solo una guía; si excede el tiempo sugerido para la ejecución de este simulacro (45 minutos), podrá continuar realizándolo sin ningún inconveniente.</li>
+                        <li>Dado que en el examen de admisión se dispone de un tiempo límite de 1 minuto y 30 segundos por pregunta, en la esquina superior derecha encontrará un contador para que administre su tiempo. Este contador es solo una guía; si excede el tiempo sugerido para la ejecución de este simulacro (60 minutos), podrá continuar realizándolo sin ningún inconveniente.</li>
                         <li>Se recomienda <b>evitar el uso de herramientas de inteligencia artificial (ChatGPT, DeepSeek, Gemini, etc)</b> durante la realización de este simulacro, ya que en el examen no contará con el apoyo de dichas herramientas. De preferencia, puede utilizar estas herramientas para verificar sus respuestas una vez haya concluido el simulacro. </li>
                         <li>Al finalizar el simulacro, podrá visualizar su puntaje final, las respuestas seleccionadas y las correctas para cada pregunta. Si desea guardar los resultados, puede hacerlo siguiendo estos pasos: presione <b>Ctrl + P</b> y seleccione la opción "Guardar como PDF" en la sección de impresoras.</li>
                         <li>Puede realizar este simulacro las veces que considere necesario.</li>
                     </ul>
                 </div>
 
-                <p>Tenga en cuenta que este material ha sido elaborado exclusivamente para su autoevaluación. <b>No tiene ninguna incidencia en la certificación final del curso</b>, utilicelo como una herramienta de retroalimentación, para probarse a usted mismo.
+                <p>Tenga en cuenta que este material ha sido elaborado exclusivamente para su autoevaluación. <b>No tiene ninguna incidencia en la certificación final del curso</b>, utilicelo como una herramienta de retroalimentación y estudio autonommo, para probarse a usted mismo.
                 </p>
             </div>
             <button onclick="startExam()">Iniciar simulacro</button>
@@ -303,33 +324,455 @@
     <script>
         let startTime, timerInterval;
         let studentName = "";
-        const questions = [
-            {
-                question: "Si \\(a, b, c\\) son números primos diferentes y \\( n = \\frac{a^{-1} b^{-3}}{a^{-2} b^{-4} c^{-2}} \\) es correcto afirmar que:",
-                options: [
-                    { text: " \\(n\\) es entero.", letter: "A" },
-                    { text: " \\(n\\) es un número primo.", letter: "B" },
-                    { text: " \\(n\\) es un racional negativo.", letter: "C" },
-                    { text: " \\(n\\) es irracional.", letter: "D" }
-                ],
-                correct: 0
-            },
-            {
-                question: "What phenomenon is shown in this image?",
-                image: {
-                    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Alice_drink_me.jpg/250px-Alice_drink_me.jpg",
-                    caption: "Figure 2"
-                },
-                options: [
-                    { text: "Reflection", letter: "a" },
-                    { text: "Refraction", letter: "b" },
-                    { text: "Diffraction", letter: "c" },
-                    { text: "Dispersion", letter: "d" }
-                ],
-                correct: 1
-            },
+        const questions = 
+        [
+  {
+    "question": "Si \\( a, b, c \\) son números primos diferentes y<br><br>\\[\n n = \\frac{a^{-1} b^{-3}}{a^{-2} b^{-4} c^{-2}}\n \\]\n<br>es correcto afirmar que:",
+    "options": [
+      { "text": " \\( n \\) es entero.", "letter": "A" },
+      { "text": " \\( n \\) es un número primo.", "letter": "B" },
+      { "text": " \\( n \\) es un racional negativo.", "letter": "C" },
+      { "text": " \\( n \\) es irracional.", "letter": "D" }
+    ],
+    "correct": 0
+  },
+  {
+    "question": "De las gráficas, la única que representa una función logarítmica es:",
+      "options": [
+          { 
+              text: "", 
+              letter: "a",
+              image: "Opcion1Log.png"
+          },
+          { 
+              text: "", 
+              letter: "b",
+              image: "Opcion2Log.png"
+          },
+          { 
+              text: "", 
+              letter: "c",
+              image: "Opcion3Log.png"
+          },
+          { 
+              text: "", 
+              letter: "d",
+              image: "Opcion4Log.png"
+          }
+      ],
+      correct: 1
+  },
+  {
+    "question": "Considere las siguientes informaciones acerca de dos enteros positivos \\( a \\) y \\( b \\):<br><br>&nbsp;&nbsp;&nbsp;&nbsp;(1) Si \\( a - b \\) es múltiplo de \\( 5 \\), entonces \\( a^3 - b^3 \\) también lo es.<br>&nbsp;&nbsp;&nbsp;&nbsp;(2) Si \\( a < b \\), entonces el número de divisores primos de \\( a \\) es menor que el número de divisores primos de \\( b \\).<br><br>De las afirmaciones es correcto asegurar que:",
+    "options": [
+      { "text": " (1) es falsa y (2) es verdadera.", "letter": "A" },
+      { "text": " (1) y (2) son verdaderas.", "letter": "B" },
+      { "text": " (1) y (2) son falsas.", "letter": "C" },
+      { "text": " (1) es verdadera y (2) es falsa.", "letter": "D" }
+    ],
+    "correct": 3
+  },
+  {
+    "question": "Sean \\( w \\), \\( y \\) y \\( z \\) números reales negativos con \\( w > z \\). De las proposiciones:<br><br>&nbsp;&nbsp;&nbsp;&nbsp;(1) \\( \\dfrac{1}{w} > \\dfrac{1}{z} \\)<br>&nbsp;&nbsp;&nbsp;&nbsp;(2) \\( -z > -w \\)<br><br>es correcto afirmar que:",
+    "options": [
+      { "text": " (1) y (2) son verdaderas.", "letter": "A" },
+      { "text": " (1) y (2) son falsas.", "letter": "B" },
+      { "text": " (1) es verdadera y (2) es falsa.", "letter": "C" },
+      { "text": " (1) es falsa y (2) es verdadera.", "letter": "D" }
+    ],
+    "correct": 3
+  },
+  {
+    "question": "Sea \\( k \\) un número natural. Si al dividir el doble de \\( k \\) entre \\( 6 \\) se obtiene como cociente \\( n \\) y como residuo \\( 4 \\), entonces:",
+    "options": [
+      { "text": " \\( k - 6n = 4 \\)", "letter": "A" },
+      { "text": " \\( k - 3n = 2 \\)", "letter": "B" },
+      { "text": " \\( 2k - 3n = 2 \\)", "letter": "C" },
+      { "text": " \\( 6n - k = 4 \\)", "letter": "D" }
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Analice las siguientes afirmaciones:<br><br>&nbsp;&nbsp;&nbsp;&nbsp;(1) Todo número entero se puede expresar como el producto de dos números racionales.<br>&nbsp;&nbsp;&nbsp;&nbsp;(2) Todo número que sea el cociente de dos números reales es un racional.<br><br>De las afirmaciones es correcto asegurar que:",
+    "options": [
+      { "text": " (1) es verdadera y (2) es falsa.", "letter": "A" },
+      { "text": " (1) y (2) son verdaderas.", "letter": "B" },
+      { "text": " (1) es falsa y (2) es verdadera.", "letter": "C" },
+      { "text": " (1) y (2) son falsas.", "letter": "D" }
+    ],
+    "correct": 0
+  },
+  {
+    "question": "Si \\( n = \\frac{1}{3} \\), el valor de la expresión \\( 8^n + \\frac{6}{n} \\), es",
+    "options": [
+      { "text": " \\( \\frac{17}{3} \\)", "letter": "A" },
+      { "text": " 20", "letter": "B" },
+      { "text": " \\( \\frac{7}{3} \\)", "letter": "C" },
+      { "text": " 4", "letter": "D" }
+    ],
+    "correct": 1
+  },
+  {
+    "question": "Si \\( x = \\frac{2}{3} - \\frac{4}{5} \\); y \\( y = \\frac{5}{3} - \\frac{7}{5} \\), es correcto afirmar que",
+    "options": [
+      { "text": " \\( x \\) e \\( y \\) son negativos.", "letter": "A" },
+      { "text": " \\( x \\) es positivo e \\( y \\) es negativo.", "letter": "B" },
+      { "text": " \\( x \\) es negativo e \\( y \\) es positivo.", "letter": "C" },
+      { "text": " \\( x \\) e \\( y \\) son positivos.", "letter": "D" }
+    ],
+    "correct": 2
+  },
+  {
+    "question": "La suma del mínimo común múltiplo y el máximo común divisor de 28 y 18 es:",
+    "options": [
+      { "text": " \\( 506 \\)", "letter": "A" },
+      { "text": " \\( 256 \\)", "letter": "B" },
+      { "text": " \\( 508 \\)", "letter": "C" },
+      { "text": " \\( 254 \\)", "letter": "D" }
+    ],
+    "correct": 3
+  },
+  {
+  "question": "Cual es la medida del angulo \\(ABC\\), si \\(\\overline{DB}\\) corresponde a su bisectriz",
+  "image": {
+    "url": "AngBisec.png",
+    "caption": "Figure"
+  },
+  "options": [
+    { "text": "\\( 68 \\)", "letter": "A" },
+    { "text": "\\( 64 \\)", "letter": "B" },
+    { "text": "\\( 34 \\)", "letter": "C" },
+    { "text": "\\( 73/3 \\)", "letter": "D" }
+  ],
+  "correct": 0
+  },
 
-        ];
+  {
+    "question": "Un cabello humano tiene un grosor promedio de \\( 1 \\times 10^{-6} \\, \\text{m} \\). Por lo general, el cuero cabelludo alberga unos 150.000 cabellos; el grosor total del cabello humano se puede expresar como:",
+    "options": [
+        { "text": " \\( 1.5 \\times 10^{-3} \\, \\text{m} \\)", "letter": "A" },
+        { "text": " \\( 1 \\times 10^{11} \\, \\text{m} \\)", "letter": "B" },
+        { "text": " \\( 1.5 \\times 10^{-1} \\, \\text{m} \\)", "letter": "C" },
+        { "text": " \\( 1 \\times 10^{-2} \\, \\text{m} \\)", "letter": "D" }
+    ],
+    "correct": 2
+   },
+   {
+    "question": "Sean<br><br>\\[P = \\{n > 1, n \\text{ primo y divide a 36}\\}\\]\n\\[Q = \\{n > 1, n \\text{ primo y divide a 48}\\}\\]<br><br>En el conjunto \\( P \\cap Q \\), el número de elementos es:",
+    "options": [
+      { "text": " 2", "letter": "A" },
+      { "text": " 4", "letter": "B" },
+      { "text": " 3", "letter": "C" },
+      { "text": " 1", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "Si \\( n \\) y \\( m \\) son números enteros diferentes, mayores que -9 y menores que 6, el máximo valor que se obtiene al realizar el producto \\( m \\cdot n \\) es:",
+    "options": [
+      { "text": " 32", "letter": "A" },
+      { "text": " 54", "letter": "B" },
+      { "text": " 56", "letter": "C" },
+      { "text": " 20", "letter": "D" }
+    ],
+    "correct": 3
+   },
+   {
+    "question": "Suponga que las letras denotan números positivos. Al simplificar la expresión<br>\\(\n(\\frac{x^8y^{-4}}{16y^{4/3}})^{-1/4}\n\\)<br>y eliminar cualquier exponente negativo se obtiene:",
+    "options": [
+      { "text": " \\(\\frac{2y^{4/3}}{x^2}\\)", "letter": "A" },
+      { "text": " \\(\\frac{2x^2}{y^{4/3}}\\) ", "letter": "B" },
+      { "text": " \\(\\frac{y^{4/3}}{2x^2}\\) ", "letter": "C" },
+      { "text": " \\(\\frac{x^2}{2y^{4/3}}\\) ", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "Al factorizar la expresión \\(10x^2+13x-3\\) se obtiene:",
+    "options": [
+      { "text": " \\((10x - 3)(x + 1)\\)", "letter": "A" },
+      { "text": " \\((5x + 1)(2x - 3)\\)", "letter": "B" },
+      { "text": " \\((5x - 1)(2x + 3)\\)", "letter": "C" },
+      { "text": " \\((2x - 1)(5x + 3)\\)", "letter": "D" }
+    ],
+    "correct": 2
+   },
+   {
+    "question": "La edad de tres personas cumplen con las siguientes condiciones:<br><br>&nbsp;&nbsp;&nbsp;&nbsp;(1) La edad de Pablo es el triple de la de Juan y seis veces la de Antonio.<br>&nbsp;&nbsp;&nbsp;&nbsp;(2) El doble de la suma de las edades es 90.<br><br>Entonces la edad de Pablo es:",
+    "options": [
+      { "text": " 60", "letter": "A" },
+      { "text": " 42", "letter": "B" },
+      { "text": " 30", "letter": "C" },
+      { "text": " 32", "letter": "D" }
+    ],
+    "correct": 2
+   },
+   {
+    "question": "Un hombre dejó la cuarta parte de su fortuna a sus hijos, \\( \\frac{1}{6} \\) a sus hermanos, \\( \\frac{1}{12} \\) a un orfanato y los \\$10.000.000 restantes a su esposa. El valor de su fortuna era:",
+    "options": [
+      { "text": " \\$10.000.000", "letter": "A" },
+      { "text": " \\$20.000.000", "letter": "B" },
+      { "text": " \\$15.000.000", "letter": "C" },
+      { "text": " \\$30.000.000", "letter": "D" }
+    ],
+    "correct": 1
+   },
+   {
+    "question": "El señor Rodríguez salió en su automóvil, observó que el medidor de gasolina marcaba 3 galones y que le hacían falta 7 para llenar el tanque. Al cabo de dos horas y media llenó el tanque con 9 galones. Si el gasto de gasolina es proporcional al tiempo, entonces por cada hora transitada el automóvil consume ______ galones.",
+    "options": [
+      { "text": " 1,5", "letter": "A" },
+      { "text": " 0,5", "letter": "B" },
+      { "text": " 0,8", "letter": "C" },
+      { "text": " 1,25", "letter": "D" }
+    ],
+    "correct": 2
+   },
+   {
+    "question": "En octubre en un país hay 1.260.000 desempleados, lo que representa una tasa de desempleo del 10,5\\%. Si en noviembre con la misma población apta para trabajar se dice que la tasa de desempleo subió al 11\\%, entonces la cantidad de nuevos desempleados es de:",
+    "options": [
+      { "text": " 65.000", "letter": "A" },
+      { "text": " 63.000", "letter": "B" },
+      { "text": " 83.000", "letter": "C" },
+      { "text": " 60.000", "letter": "D" }
+    ],
+    "correct": 3
+   },
+   {
+    "question": "En una fábrica de juguetes laboran 6 personas que, trabajando 10 horas, producen 240 juguetes.<br><br>¿Cuántas horas necesitan 8 trabajadores de igual eficiencia para producir 480 juguetes?",
+    "options": [
+      { "text": " 15 horas", "letter": "A" },
+      { "text": " 12 horas", "letter": "B" },
+      { "text": " 18 horas", "letter": "C" },
+      { "text": " 10 horas", "letter": "D" }
+    ],
+    "correct": 1
+   },
+   {
+    "question": "De la ecuación \\( 3x^2 - 5x + 3 = 0 \\), se puede afirmar que:",
+    "options": [
+      { "text": " No tiene soluciones reales.", "letter": "A" },
+      { "text": " Tiene dos soluciones reales positivas.", "letter": "B" },
+      { "text": " Tiene una solución real positiva y otra negativa.", "letter": "C" },
+      { "text": " Tiene una sola solución real.", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "Considere las siguientes afirmaciones acerca de la ecuación \\( x^2 + 3x - 7 = 0 \\):<br><br>&nbsp;&nbsp;&nbsp;&nbsp;(1) La suma de las soluciones de la ecuación es \\(-3\\).<br>&nbsp;&nbsp;&nbsp;&nbsp;(2) El producto de las soluciones de la ecuación es \\(-7\\).<br><br>De las afirmaciones es correcto asegurar que",
+    "options": [
+      { "text": " (1) y (2) son verdaderas.", "letter": "A" },
+      { "text": " (1) es verdadera y (2) es falsa.", "letter": "B" },
+      { "text": " (1) es falsa y (2) es verdadera.", "letter": "C" },
+      { "text": " (1) y (2) son falsas.", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "Se sabe que el polinomio \\( p(x) \\) es de grado 3, tiene ceros en 1, -2 y 3, y además \\( p(4) = 2 \\). El polinomio \\( p(x) \\) es",
+    "options": [
+      { "text": " \\(\\frac{1}{9}(x-1)(x+2)(x-3)\\)", "letter": "A" },
+      { "text": " \\(\\frac{1}{35}(x+1)(x-2)(x+3)\\)", "letter": "B" },
+      { "text": " \\(\\frac{1}{35}(x-1)(x+2)(x-3)\\)", "letter": "C" },
+      { "text": " \\(\\frac{1}{9}(x+1)(x-2)(x+3)\\)", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "El conjunto solución de la desigualdad<br>\\[\\frac{1}{x} \\leq x\\]<br>es",
+    "options": [
+      { "text": " \\((-\\infty, -1] \\cup [1, \\infty)\\)", "letter": "A" },
+      { "text": " \\([1, \\infty)\\)", "letter": "B" },
+      { "text": " \\([-1, 0) \\cup [1, \\infty)\\)", "letter": "C" },
+      { "text": " \\([-1, 1]\\)", "letter": "D" }
+    ],
+    "correct": 2
+   },
+   {
+    "question": "Al dividir el polinomio \\( x^3 - 3x + 7 \\) por \\( x^2 + 3 \\) se obtiene como cociente un polinomio de grado ______ y como residuo un polinomio de grado ______",
+    "options": [
+      { "text": " \\( 2 - 1 \\)", "letter": "A" },
+      { "text": " \\( 1 - 1 \\)", "letter": "B" },
+      { "text": " \\( 1 - 2 \\)", "letter": "C" },
+      { "text": " \\( 2 - 2 \\)", "letter": "D" }
+    ],
+    "correct": 1
+   },
+   {
+    "question": "Analice las siguientes afirmaciones sobre los números primos \\( p \\) y \\( q \\):<br><br>&nbsp;&nbsp;&nbsp;&nbsp;(1) Si \\( \\frac{p}{q} \\) es un entero, entonces \\( p = q \\).<br>&nbsp;&nbsp;&nbsp;&nbsp;(2) Si \\( p > 3q \\), entonces \\( \\frac{p}{q} \\) es un entero.<br><br>De las afirmaciones es correcto asegurar que",
+    "options": [
+      { "text": " (1) es falsa y (2) es verdadera.", "letter": "A" },
+      { "text": " (1) y (2) son falsas.", "letter": "B" },
+      { "text": " (1) y (2) son verdaderas.", "letter": "C" },
+      { "text": " (1) es verdadera y (2) es falsa.", "letter": "D" }
+    ],
+    "correct": 3
+   },
+   {
+    "question": "La desigualdad \\(|-x + 2| > 3\\) tiene como conjunto solución",
+    "options": [
+      { "text": " \\((5, \\infty)\\)", "letter": "A" },
+      { "text": " \\((-\\infty, -1)\\)", "letter": "B" },
+      { "text": " \\((-1, 5)\\)", "letter": "C" },
+      { "text": " \\((-\\infty, -1) \\cup (5, \\infty)\\)", "letter": "D" }
+    ],
+    "correct": 3
+   },
+   {
+    "question": "El residuo al dividir el polinomio \\( 3x^4 + x^3 + x^2 + x + 2 \\) entre \\( x + 1 \\) es",
+    "options": [
+      { "text": " 4", "letter": "A" },
+      { "text": " -4", "letter": "B" },
+      { "text": " 8", "letter": "C" },
+      { "text": " -8", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "Obsverve el cuadrado que se presenta en la gráfica. La pendiente del segmento \\(AB\\) es",
+    "image": {
+        "url": "PendienteSegEnunciado.png",
+        "caption": "Figure" 
+    },
+    "options": [
+      { "text": " \\(-1\\)", "letter": "A" },
+      { "text": " \\(-3\\)", "letter": "B" },
+      { "text": " 1", "letter": "C" },
+      { "text": " 3", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "La ecuación de la recta perpendicular a la recta \\( 2x - 3y + 5 = 0 \\) que pasa por el punto (1, -2) es:",
+    "options": [
+      { "text": " \\( y - 2 = \\frac{3}{2}(x + 1) \\)", "letter": "A" },
+      { "text": " \\( y + 2 = \\frac{3}{2}(x - 1) \\)", "letter": "B" },
+      { "text": " \\( y - 2 = -\\frac{3}{2}(x + 1) \\)", "letter": "C" },
+      { "text": " \\( y + 2 = -\\frac{3}{2}(x - 1) \\)", "letter": "D" }
+    ],
+    "correct": 3
+   },
+   {
+    "question": "En la figura \\( AB \\) es paralela a \\( ED \\); \\( BC \\) es paralela a \\( FE \\); \\( AC \\) es paralela a \\( FD \\).<br><br> De las siguientes afirmaciones:<br>(1) Los triángulos \\( ABC \\) y \\( DEF \\) son semejantes.<br>(2) El ángulo \\( CAF \\) y el ángulo \\( BED \\) tienen la misma medida.<br><br>Se puede asegurar que",
+    "image": {
+        "url": "TrigSemejEnun.png",
+        "caption": "Figure"
+    },
+    "options": [
+      { "text": " (1) y (2) son falsas.", "letter": "A" },
+      { "text": " (1) es verdadera y (2) es falsa.", "letter": "B" },
+      { "text": " (1) es falsa y (2) es verdadera.", "letter": "C" },
+      { "text": " (1) y (2) son verdaderas.", "letter": "D" }
+    ],
+    "correct": 1
+   },
+   {
+    "question": "Si \\( y(x) = \\frac{2}{x+3} \\), entonces \\( (g \\circ g)(x) \\) es",
+    "options": [
+      { "text": " \\( \\frac{2x+6}{3x+11} \\)", "letter": "A" },
+      { "text": " \\( \\frac{x-3}{3x+5} \\)", "letter": "B" },
+      { "text": " \\( \\frac{2}{3x+11} \\)", "letter": "C" },
+      { "text": " \\( \\frac{x+3}{3x+5} \\)", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "Dos circunferencias de centros \\( A \\) y \\( B \\) son tangentes entre sí y tangentes interiores a la circunferencia mayor de centro \\( O \\).<br>\\( CD \\) es una cuerda de la circunferencia más grande y a su vez es tangente a las circunferencias más pequeñas, cuyos radios son 6 y 2. La longitud de \\( CD \\) es",
+    "image": {
+        "url": "CircusCentrosEnum.png",
+        "caption": "Figure"
+    },
+    "options": [
+      { "text": " \\( 6\\sqrt{5} \\)", "letter": "A" },
+      { "text": " \\( 2\\sqrt{10} \\)", "letter": "B" },
+      { "text": " \\( 3\\sqrt{5} \\)", "letter": "C" },
+      { "text": " \\( 4\\sqrt{10} \\)", "letter": "D" }
+    ],
+    "correct": 3
+   },
+   {
+    "question": "La parábola de la figura tiene como ecuación:",
+    "image": {
+        "url": "FuctionEnun1.png",
+        "caption": "Figure"
+    },
+    "options": [
+      { "text": " \\( y = -3 \, (x + 1)^2 + 2 \\)", "letter": "A" },
+      { "text": " \\( x = 3 \, (y + 1)^2 - 2 \\)", "letter": "B" },
+      { "text": " \\( x = -3 \, (y + 1)^2 + 2 \\)", "letter": "C" },
+      { "text": " \\( y = 3 \, (x + 1)^2 - 2 \\)", "letter": "D" }
+    ],
+    "correct": 2
+   },
+   {
+    "question": "Una función \\( f \\) está definida en todos los reales. Si se define la función \\( g \\) como \\( g(x) = f(x - 3) + 2 \\), la gráfica de \\( g \\) se obtiene de la gráfica de \\( f \\) realizando las siguientes transformaciones:<br><br>Desplazamiento de ______ unidades a la ______ unidades hacia ______",
+    "options": [
+      { "text": " dos - derecha y tres - abajo", "letter": "A" },
+      { "text": " tres - izquierda y dos - abajo", "letter": "B" },
+      { "text": " tres - derecha y dos - arriba", "letter": "C" },
+      { "text": " dos - izquierda y tres - arriba", "letter": "D" }
+    ],
+    "correct": 2
+   },
+   {
+    "question": "En el cuadrado \\( ABCD \\) de lado \\( x + y \\) se demarcaron los puntos \\( E, F, G, H \\), de tal forma que la distancia entre cada uno de estos y el vértice del cuadrado que le es más cercano es \\( x \\). El área de la región sombreada es:",
+    "image": {
+        "url": "CudAreaSom.png",
+        "caption": "Figure"
+    },
+    "options": [
+      { "text": " \\( \\frac{xy}{4} \\)", "letter": "A" },
+      { "text": " \\( \\frac{xy}{2} \\)", "letter": "B" },
+      { "text": " \\( xy \\)", "letter": "C" },
+      { "text": " \\( 2xy \\)", "letter": "D" }
+    ],
+    "correct": 3
+   },
+   {
+    "question": "La recta que es paralela a la recta \\(3x - 2y + 1 = 0\\) y tiene intercepto en la parte negativa del eje \\(y\\) es",
+    "options": [
+      { "text": " \\(3x - 2y - 1 = 0\\)", "letter": "A" },
+      { "text": " \\(2x - 3y - 3 = 0\\)", "letter": "B" },
+      { "text": " \\(3x - 2y + 3 = 0\\)", "letter": "C" },
+      { "text": " \\(2x - 3y + 1 = 0\\)", "letter": "D" }
+    ],
+    "correct": 2 
+   },
+   {
+    "question": "El periodo de \\( f(x) = 3 \\cos(2x) \\) es",
+    "options": [
+      { "text": " \\( 2\\pi \\)", "letter": "A" },
+      { "text": " \\( \\frac{\\pi}{2} \\)", "letter": "B" },
+      { "text": " \\( \\pi \\)", "letter": "C" },
+      { "text": " \\( \\frac{\\pi}{3} \\)", "letter": "D" }
+    ],
+    "correct": 2
+   },
+   {
+    "question": "En la figura aparecen tres circunferencias con radio igual a 1 y con centros A, B y C. Se sabe que en una circunferencia de radio igual a r el área del sector determinado por un ángulo t expresado en radianes es \\(\\frac{1}{2}tr^{2}\\).<br><br> Si \\( H \\) representa el área del triángulo \\( ABC \\), el área de la región sombreada es",
+    "image": {
+        "url": "TrigArea.png",
+        "caption": "Figure"
+    },
+    "options": [
+      { "text": " \\( \\frac{\\pi}{2} - 2H \\)", "letter": "A" },
+      { "text": " \\( \\frac{\\pi}{2} - H \\)", "letter": "B" },
+      { "text": " \\( \\frac{\\pi}{3} - H \\)", "letter": "C" },
+      { "text": " \\( \\frac{\\pi}{3} - 2H \\)", "letter": "D" }
+    ],
+    "correct": 0
+   },
+   {
+    "question": "Si \\(\\alpha\\) es agudo y \\(\\cos \\alpha = \\frac{2}{3}\\), entonces el valor de \\(\\tan \\alpha\\) es",
+    "options": [
+      { "text": " \\(\\frac{1}{3}\\)", "letter": "A" },
+      { "text": " \\(\\frac{\\sqrt{5}}{3}\\)", "letter": "B" },
+      { "text": " \\(\\frac{1}{2}\\)", "letter": "C" },
+      { "text": " \\(\\frac{\\sqrt{5}}{2}\\)", "letter": "D" }
+    ],
+    "correct": 3
+  },
+
+];
 
         function validateName() {
             studentName = document.getElementById('userName').value.trim();
@@ -365,14 +808,22 @@
                     <p class="image-caption">${q.image.caption}</p>
                 ` : '';
                 
-                // Generate options with letters
-                const optionsHTML = q.options.map((opt, i) => `
-                    <label>
-                        <input type="radio" name="q${index}" value="${i}">
-                        <span class="option-letter">${opt.letter}.</span>
-                        <span class="option-text">${opt.text}</span>
-                    </label>
-                `).join('');
+                // Generate options with letters and optional images
+                const optionsHTML = q.options.map((opt, i) => {
+                    const optionImageHTML = opt.image ? 
+                        `<img src="${opt.image}" class="option-image" alt="Option ${opt.letter} image">` : '';
+                    
+                    return `
+                        <label>
+                            <input type="radio" name="q${index}" value="${i}">
+                            <span class="option-letter">${opt.letter}.</span>
+                            <div class="option-with-image">
+                                ${optionImageHTML}
+                                <span class="option-text">${opt.text}</span>
+                            </div>
+                        </label>
+                    `;
+                }).join('');
                 
                 questionDiv.innerHTML = `
                     <h3>Pregunta ${index + 1}</h3>
@@ -421,7 +872,11 @@
                 const questionData = {
                     ...q,
                     userAnswer,
-                    optionsWithLetters: q.options.map(opt => ` ${opt.text}`)
+                    optionsWithLetters: q.options.map(opt => {
+                        const optionImageHTML = opt.image ? 
+                            `<img src="${opt.image}" class="result-option-image" alt="Option ${opt.letter} image">` : '';
+                        return `${optionImageHTML} ${opt.text}`;
+                    })
                 };
                 
                 return questionData;
