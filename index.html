@@ -254,6 +254,16 @@
             border: 1px solid #ddd;
             margin-right: 10px;
         }
+
+        /* New style for PDF button */
+        .pdf-button {
+            background-color: #dc3545;
+            margin: 30px auto;
+            display: block;
+        }
+        .pdf-button:hover {
+            background-color: #bb2d3b;
+        }
     </style>
 </head>
 <body>
@@ -280,7 +290,7 @@
                         <li>El simulacro consta de <b>40 preguntas</b> de selección múltiple, similares a las formuladas en los exámenes de admisión.</li>
                         <li>Dado que en el examen de admisión se dispone de un tiempo límite de 1 minuto y 30 segundos por pregunta, en la esquina superior derecha encontrará un contador para que administre su tiempo. Este contador es solo una guía; si excede el tiempo sugerido para la ejecución de este simulacro (60 minutos), podrá continuar realizándolo sin ningún inconveniente.</li>
                         <li>Se recomienda <b>evitar el uso de herramientas de inteligencia artificial (ChatGPT, DeepSeek, Gemini, etc)</b> durante la realización de este simulacro, ya que en el examen no contará con el apoyo de dichas herramientas. De preferencia, puede utilizar estas herramientas para verificar sus respuestas una vez haya concluido el simulacro. </li>
-                        <li>Al finalizar el simulacro, podrá visualizar su puntaje final, las respuestas seleccionadas y las correctas para cada pregunta. Si desea guardar los resultados, puede hacerlo siguiendo estos pasos: presione <b>Ctrl + P</b> y seleccione la opción "Guardar como PDF" en la sección de impresoras.</li>
+                        <li>Al finalizar el simulacro, puede precionar el boton "Guardar resultados como PDF" para conservar sus resultados.</li>
                         <li>Puede realizar este simulacro las veces que considere necesario.</li>
                     </ul>
                 </div>
@@ -318,6 +328,9 @@
             </div>
             
             <div id="detailedResults"></div>
+            
+            <!-- New PDF Button -->
+            <button class="pdf-button" onclick="saveAsPDF()">Guardar resultados como PDF</button>
         </div>
     </div>
 
@@ -919,6 +932,11 @@
                 detailedResults.appendChild(resultDiv);
             });
             MathJax.typesetPromise().catch(console.error);
+        }
+
+        // New function to save as PDF
+        function saveAsPDF() {
+            window.print();
         }
     </script>
 </body>
